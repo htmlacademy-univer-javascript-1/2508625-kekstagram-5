@@ -1,11 +1,11 @@
-import { createPhotoDescriptions } from './data.js';
+import { createPhotoList } from './data.js';
 
 const picturesList = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const createPictures = createPhotoDescriptions();
+const createPictures = createPhotoList();
 const similarListFragment = document.createDocumentFragment();
 
 createPictures.forEach(({ url, description, likes, comments }) => {
