@@ -1,5 +1,5 @@
-import { createPhotoList } from './data.js';
-import { renderGallery } from './photoRender.js';
+import { renderGallery } from './renderGallery.js';
+import { createPhotoList, PHOTO_COUNT } from './data.js';
 
-renderGallery(createPhotoList());
-
+const photos = createPhotoList(PHOTO_COUNT);
+renderGallery(photos);

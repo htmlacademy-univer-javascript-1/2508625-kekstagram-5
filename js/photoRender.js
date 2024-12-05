@@ -6,7 +6,7 @@ const createImageElement = (imageData) => {
   element.querySelector('.picture__img').src = imageData.url;
   element.querySelector('.picture__img').alt = imageData.description;
   element.querySelector('.picture__comments').textContent = imageData.comments.length;
-  element.querySelector('.picture__likes').textContent = imageData.Likes;
+  element.querySelector('.picture__likes').textContent = imageData.likes;
   return element;
 };
 
