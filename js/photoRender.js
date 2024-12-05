@@ -1,19 +1,20 @@
-const template = document.querySelector('#picture').content.querySelector('.picture');
-const gallery = document.querySelector('.pictures');
+import { createPhotoDescriptions } from './data.js';
 
-const createImageElement = (imageData) => {
-  const element = template.cloneNode(true);
-  element.querySelector('.picture__img').src = imageData.url;
-  element.querySelector('.picture__img').alt = imageData.description;
-  element.querySelector('.picture__comments').textContent = imageData.comments.length;
-  element.querySelector('.picture__likes').textContent = imageData.likes;
-  return element;
-};
+const picturesList = document.querySelector('.pictures');
+const pictureTemplate = document.querySelector('#picture')
+  .content
+  .querySelector('.picture');
 
-const renderGallery = (images) => {
-  const fragment = document.createDocumentFragment();
-  images.forEach((image) => fragment.appendChild(createImageElement(image)));
-  gallery.appendChild(fragment);
-};
+const createPictures = createPhotoDescriptions();
+const similarListFragment = document.createDocumentFragment();
 
-export { renderGallery };
+createPictures.forEach(({ url, description, likes, comments }) => {
+  const picture = pictureTemplate.cloneNode(true);
+  picture.querySelector('.picture__img').src = url;
+  picture.querySelector('.picture__img').alt = description;
+  picture.querySelector('.picture__comments').textContent = comments.length;
+  picture.querySelector('.picture__likes').textContent = likes;
+  similarListFragment.appendChild(picture);
+});
+
+picturesList.appendChild(similarListFragment);
