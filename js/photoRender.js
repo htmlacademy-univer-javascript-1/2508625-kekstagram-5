@@ -1,20 +1,25 @@
 import { createPhotoList, PHOTO_COUNT } from './data.js';
 
-const picturesList = document.querySelector('.pictures');
-const pictureTemplate = document.querySelector('#picture')
+const galleryContainer = document.querySelector('.pictures');
+const photoTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
-const createPictures = createPhotoList(PHOTO_COUNT);
-const similarListFragment = document.createDocumentFragment();
+const generatePhotoElement = ({ url, description, likes, comments }) => {
+  const photoElement = photoTemplate.cloneNode(true);
+  photoElement.querySelector('.picture__img').src = url;
+  photoElement.querySelector('.picture__img').alt = description;
+  photoElement.querySelector('.picture__comments').textContent = comments.length;
+  photoElement.querySelector('.picture__likes').textContent = likes;
+  return photoElement;
+};
 
-createPictures.forEach(({ url, description, likes, comments }) => {
-  const picture = pictureTemplate.cloneNode(true);
-  picture.querySelector('.picture__img').src = url;
-  picture.querySelector('.picture__img').alt = description;
-  picture.querySelector('.picture__comments').textContent = comments.length;
-  picture.querySelector('.picture__likes').textContent = likes;
-  similarListFragment.appendChild(picture);
+const photos = createPhotoList(PHOTO_COUNT);
+const fragment = document.createDocumentFragment();
+
+photos.forEach((photo) => {
+  const photoItem = generatePhotoElement(photo);
+  fragment.appendChild(photoItem);
 });
 
-picturesList.appendChild(similarListFragment);
+galleryContainer.appendChild(fragment);
