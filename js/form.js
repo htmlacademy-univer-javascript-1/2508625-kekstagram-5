@@ -11,6 +11,7 @@ const Elements = {
   fileField: document.querySelector('.img-upload__form .img-upload__input'),
   hashtagField: document.querySelector('.img-upload__form .text__hashtags'),
   previewImage: document.querySelector('.img-upload__preview img'),
+  descriptionField: document.querySelector('.img-upload__form .text__description')
 };
 
 const Messages = {
@@ -43,8 +44,28 @@ const formValidator = new Pristine(Elements.form, {
 });
 
 formValidator.addValidator(Elements.hashtagField, validateTags, Messages.INVALID_TAG);
+formValidator.addValidator(Elements.hashtagField, (value) => splitAndCleanTags(value).length <= Config.MAX_TAGS, Messages.TOO_MANY_TAGS, 3, true);
+formValidator.addValidator(Elements.hashtagField, (value) => {
+  const tags = splitAndCleanTags(value);
+  const uniqueTags = new Set(tags.map((tag) => tag.toLowerCase()));
+  return uniqueTags.size === tags.length;
+}, Messages.DUPLICATE_TAGS, 2, true);
 
-const changeModalVisibility = (isVisible) => {
+function onDocumentKeydown(evt) {
+  const isTextFieldFocused = document.activeElement.matches('.text__hashtags, .text__description');
+  if (evt.key === 'Escape' && !isTextFieldFocused) {
+    evt.preventDefault();
+    closeModal();
+  }
+}
+
+function closeModal() {
+  Elements.form.reset();
+  formValidator.reset();
+  changeModalVisibility(false);
+}
+
+function changeModalVisibility(isVisible) {
   Elements.overlay.classList.toggle('hidden', !isVisible);
   Elements.body.classList.toggle('modal-open', isVisible);
 
@@ -53,18 +74,10 @@ const changeModalVisibility = (isVisible) => {
   } else {
     document.removeEventListener('keydown', onDocumentKeydown);
   }
-};
-
-function onDocumentKeydown(evt) {
-  const isTextFieldFocused = document.activeElement.matches('.text__hashtags, .text__description');
-  if (evt.key === 'Escape' && !isTextFieldFocused) {
-    evt.preventDefault();
-    changeModalVisibility(false);
-  }
 }
 
 Elements.fileField.addEventListener('change', () => changeModalVisibility(true));
-Elements.cancelButton.addEventListener('click', () => changeModalVisibility(false));
+Elements.cancelButton.addEventListener('click', closeModal);
 
 Elements.form.addEventListener('submit', (event) => {
   event.preventDefault();
